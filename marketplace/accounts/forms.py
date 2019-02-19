@@ -8,7 +8,7 @@ class RegisterForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('firstname','lastname','email',)
+        fields = ('firstname','lastname','email','password','password2')
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -21,6 +21,7 @@ class RegisterForm(forms.ModelForm):
         # Check that the two password entries match
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
+
         if password1 and password2 and password1 != password2:
             raise forms.ValidationError("Passwords don't match")
         return password2
