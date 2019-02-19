@@ -2,9 +2,8 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-
 from .forms import UserAdminCreationForm, UserAdminChangeForm
-from .models import User
+from .models import User, Store
 
 class UserAdmin(BaseUserAdmin):
     # The forms to add and change user instances
@@ -14,12 +13,12 @@ class UserAdmin(BaseUserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('email', 'superuser')
-    list_filter = ('superuser','staff','active')
+    list_display = ('email', 'is_superuser')
+    list_filter = ('is_superuser','is_staff','is_active')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('firstname','lastname',)}),
-        ('Permissions', {'fields': ('superuser','staff','active')}),
+        ('Personal info', {'fields': ('firstname','lastname','avatar')}),
+        ('Permissions', {'fields': ('is_superuser','is_staff','is_active')}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
@@ -35,8 +34,7 @@ class UserAdmin(BaseUserAdmin):
 
 
 admin.site.register(User, UserAdmin)
-
-
+admin.site.register(Store)
 
 # Remove Group Model from admin. We're not using it.
 admin.site.unregister(Group)

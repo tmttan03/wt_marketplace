@@ -2,8 +2,6 @@ from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from .models import User
 
-from wagtail.users.forms import UserEditForm, UserCreationForm
-
 class RegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput)
@@ -64,7 +62,7 @@ class UserAdminChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('firstname','lastname','email', 'password', 'active','staff','superuser')
+        fields = ('firstname','lastname','email', 'password')
 
     def clean_password(self):
         # Regardless of what the user provides, return the initial value.
