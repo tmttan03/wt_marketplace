@@ -52,6 +52,9 @@ INSTALLED_APPS = [
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
+#WAGTAIL_USER_EDIT_FORM = 'accounts.forms.UserAdminCreationForm'
+#WAGTAIL_USER_CREATION_FORM = 'accounts.forms.UserAdminChangeForm'
+#WAGTAIL_USER_CUSTOM_FIELDS = ['firstname', 'lastname','email']
 
 MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',

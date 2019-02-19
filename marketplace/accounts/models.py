@@ -52,7 +52,7 @@ class UserManager(BaseUserManager):
             lastname=lastname
         )
         user.staff = True
-        user.admin = True
+        user.superuser = True
         user.save(using=self._db)
         return user
 
@@ -67,7 +67,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     lastname = models.CharField(max_length=100)
     active = models.BooleanField(default=True)
     staff = models.BooleanField(default=False) # a admin user; non super-user
-    admin = models.BooleanField(default=False) # a superuser
+    superuser = models.BooleanField(default=False) # a superuser
     # notice the absence of a "Password field", that's built in.
 
     USERNAME_FIELD = 'email'
@@ -76,11 +76,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_full_name(self):
         # The user is identified by their email address
-        return self.email
+        return self.firstname + ' ' + self.lastname 
 
     def get_short_name(self):
         # The user is identified by their email address
-        return self.email
+        return self.firstname
 
     def __str__(self):              # __unicode__ on Python 2
         return self.email
@@ -101,11 +101,27 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.staff
 
     @property
-    def is_admin(self):
+    def is_superuser(self):
         "Is the user a admin member?"
-        return self.admin
+        return self.superuser
 
     @property
     def is_active(self):
         "Is the user active?"
         return self.active
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    image = models.ImageField(default='default.jpg', upload_to='profile_pics')
+
+    def __str__(self):
+        return f'{self.user.username} Profile'
+
+    def save(self, **kwargs):
+        super().save()
+        img = Image.open(self.image.path)
+        if img.height > 300 or img.width > 300:
+            output_size = (300,300)
+            img.thumbnail(output_size)
+            img.save(self.image.path)       
