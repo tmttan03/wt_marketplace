@@ -1,21 +1,50 @@
 {% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
 {% load static %}
 
 {% block body_class %}template-homepage{% endblock %}
 
 {% block extra_css %}
-
-{% comment %}
-Delete the line below if you're just getting started and want to remove the welcome screen!
-{% endcomment %}
 <link rel="stylesheet" href="{% static 'css/welcome_page.css' %}">
 {% endblock extra_css %}
 
 {% block content %}
 
-{% comment %}
-Delete the line below if you're just getting started and want to remove the welcome screen!
-{% endcomment %}
-{% include 'home/welcome_page.html' %}
+<div class="container">
+    {%  for product in products  %}
+        {% if forloop.counter0|divisibleby:4 %} <div class="row text-center"> {%  endif %}
+            <div class="col-xl-3">
+                <a href="{{ product.url }}" id="detail-card"> 
+                <div class="card">
+                {% for photo in product.productalbum_set.all %} 
+                    {% if forloop.counter == 1 %} 
+                        <img class="img-fluid" src="{{ photo.image.url }}" width="255" height="245" /> 
+                    {% endif %}
+                {% empty %}
+                    <img class="img-fluid" src="http://placehold.it/245" alt=""/> 
+                {% endfor %}
+                    <span class="badge badge-dark" id="price-badge">{{ product.price }}</span>
 
-{% endblock content %}
+                    <div class="card-content" id="product-details">
+                        <hr>
+                        <b><p>{{ product.name }} </p></b>
+                        <small>
+                            {{ product.location.place | truncatechars:20 }} &nbsp;
+                            {{ product.created_at | timesince }}
+                        </small>
+                        <br>
+                    </div><!-- card content -->
+                </div><!-- card -->
+            </a><!-- link -->
+            </div><!-- col-xl-4 -->
+    {%  if forloop.counter|divisibleby:4 or forloop.last %}</div><br><!-- row closing -->{%  endif %}
+</div><!-- container -->
+    {%  empty %}
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+            <h1 class="display-4">No Products Yet</h1>
+            <p class="lead">Start by Creating Your First Product. </p>
+            </div>
+        </div>
+    {%  endfor %}
+{% endblock %}

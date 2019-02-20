@@ -21,6 +21,9 @@ urlpatterns = [
     url('register/', account_views.register, name="register"),
     url('login/', auth_views.LoginView.as_view(template_name='accounts/login.html',), name="login"),
     url('logout/', auth_views.LogoutView.as_view(template_name='accounts/logout.html'), name="logout"),
+    #url('edit-profile/', account_views.profile, name="edit-profile"),
+    #path('profile/<str:username>/', ProfileView.as_view(), name='profile'),
+
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's page serving mechanism. This should be the last pattern in
     # the list:

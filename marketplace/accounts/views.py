@@ -7,6 +7,7 @@ from .forms import RegisterForm, UserAdminCreationForm, UserAdminChangeForm
 # Create your views here.
 
 def register(request):
+	"""View to show the register page"""
 	if request.method == 'POST':
 		form = RegisterForm(request.POST)
 		if form.is_valid():
@@ -18,3 +19,5 @@ def register(request):
 	else:
 		form = RegisterForm()
 	return render(request, 'accounts/register.html',{'form': form})
+
+

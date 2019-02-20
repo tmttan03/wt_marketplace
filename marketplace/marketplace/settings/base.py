@@ -174,3 +174,7 @@ PLACES_MAPS_API_KEY='AIzaSyDkPCeqvo9YoQ0d-5YYMQwy-v80IhLcIQg'
 PLACES_MAP_WIDGET_HEIGHT=150
 PLACES_MAP_OPTIONS='{"center": { "lat": 38.971584, "lng": -95.235072 }, "zoom": 10}'
 PLACES_MARKER_OPTIONS='{"draggable": true}'
+
+LOGIN_REDIRECT_URL = '/'
+
+LOGIN_URL = 'login'
