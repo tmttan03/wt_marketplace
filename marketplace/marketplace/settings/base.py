@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'search',
     'accounts',
     'products',
+    'places',
 
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
@@ -53,9 +54,6 @@ INSTALLED_APPS = [
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
-#WAGTAIL_USER_EDIT_FORM = 'accounts.forms.UserAdminCreationForm'
-#WAGTAIL_USER_CREATION_FORM = 'accounts.forms.UserAdminChangeForm'
-#WAGTAIL_USER_CUSTOM_FIELDS = ['firstname', 'lastname','email']
 
 MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -172,3 +170,7 @@ BASE_URL = 'http://example.com'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+PLACES_MAPS_API_KEY='AIzaSyDkPCeqvo9YoQ0d-5YYMQwy-v80IhLcIQg'
+PLACES_MAP_WIDGET_HEIGHT=150
+PLACES_MAP_OPTIONS='{"center": { "lat": 38.971584, "lng": -95.235072 }, "zoom": 10}'
+PLACES_MARKER_OPTIONS='{"draggable": true}'
