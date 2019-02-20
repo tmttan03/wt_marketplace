@@ -9,4 +9,5 @@ def create_profile(sender, instance, created, **kwargs):
         store = Store()
         store.user = instance
         store.save()
-        
+
+    
