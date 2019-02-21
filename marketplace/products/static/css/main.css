@@ -1,0 +1,97 @@
+#id_name,  #id_price, #id_location, #id_category, #id_description, #id_img_field{
+    display: block;
+    width: 100%;
+    height: calc(2.25rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+/*Create Post Form */
+#btn-create{
+    float: right;
+    margin-top: 10px;
+  }
+  
+  #btn-update{
+    float: right;
+    margin: 10px;
+  }
+  
+  
+  #new_post_modal .modal-title{
+    color: #1d2129;
+    font-size: 14px;
+  }
+  
+  #new_post_modal .modal-body{
+    padding: 5;
+  }
+  
+  #id_name, #id_price, #id_location, #id_category, #id_qty, #id_stock_total{
+    border: none;
+    border-bottom: 1px solid #ccd4da;
+    font-size: 14px;
+  }
+  
+  #id_description, #id_comment{
+    border: none;
+    font-size: 14px;
+  }
+  
+  #id_category select {
+    /* for Firefox */
+    -moz-appearance: none;
+    /* for Chrome */
+    -webkit-appearance: none;
+    font-size: 14px!important;
+  }
+  
+  label.col-form-label.requiredField, label.form-check-label {
+      font-size: 14px;
+      margin-left: 10px;
+      color: #848484;
+  }
+  
+#id_is_draft{
+    float: right;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+label[for=id_is_draft]
+{
+    float: right;
+    margin-right: 10px;
+    margin-top: 5px;
+}
+  
+  /* For IE10 */
+  #id_category  select::-ms-expand {
+    display: none;
+  }
+  
+  #new_post_modal .card{
+    padding: 5px;
+  }
+  
+  ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    font-size: 14px;
+  }
+  ::-moz-placeholder { /* Firefox 19+ */
+    font-size: 14px;
+  }
+  :-ms-input-placeholder { /* IE 10+ */
+    font-size: 14px;
+  }
+  :-moz-placeholder { /* Firefox 18- */
+    font-size: 14px;
+  }
+  

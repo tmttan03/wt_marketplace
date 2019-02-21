@@ -1,6 +1,6 @@
 from django.db import models
 
-from accounts.models import Store
+#from accounts.models import Store
 from places.fields import PlacesField
 from PIL import Image
 
@@ -29,7 +29,7 @@ class Product(models.Model):
 	location = PlacesField()
 	category = models.ForeignKey(Category, on_delete=models.CASCADE)
 	#seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name="store_owner")
-	store = models.ForeignKey(Store, on_delete=models.CASCADE)
+	#store = models.ForeignKey(Store, on_delete=models.CASCADE)
 	is_draft = models.BooleanField(default=False)
 	#stock_on_hand = models.PositiveIntegerField(default=1)
 	status = models.CharField(

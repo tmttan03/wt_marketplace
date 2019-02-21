@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'accounts',
     'products',
     'places',
+    'store',
 
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
@@ -178,3 +179,10 @@ PLACES_MARKER_OPTIONS='{"draggable": true}'
 LOGIN_REDIRECT_URL = '/'
 
 LOGIN_URL = 'login'
+
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'tmttan03@gmail.com'
+EMAIL_HOST_PASSWORD = 'hdilt2201400117'
+EMAIL_PORT = 587

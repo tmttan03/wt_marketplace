@@ -1,9 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import PermissionsMixin
+from django.contrib.auth.models import Group, PermissionsMixin
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
 from PIL import Image
+
 
 # Create your models here.
 class UserManager(BaseUserManager):
@@ -58,8 +59,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     firstname = models.CharField(max_length=100, blank=True, null=True)
     lastname = models.CharField(max_length=100, blank=True, null=True)
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False) # a admin user; non super-user
+    is_staff = models.BooleanField(default=True) # a admin user; non super-user
     is_superuser = models.BooleanField(default=False) # a superuser
+    is_owner = models.BooleanField(default=False)
     avatar = models.ImageField(default='profile_pics/default.jpg', upload_to='profile_pics')
     
     # notice the absence of a "Password field", that's built in.
@@ -88,13 +90,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         "Does the user have permissions to view the app `app_label`?"
         # Simplest possible answer: Yes, always
         return True
-
-
-
-class Store(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="store")
-   
-    def __str__(self):
-        return f'{self.user.get_short_name()} Store'
-
     
+
+
+
+
+
