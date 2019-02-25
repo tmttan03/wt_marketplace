@@ -1,5 +1,6 @@
 {% autoescape off %}
 Hi {{ invite.invited }},
 Please click on the link to 
+{{invite.token}}
 http://{{ domain }}{% url 'member-register' invite.token %}
 {% endautoescape %}

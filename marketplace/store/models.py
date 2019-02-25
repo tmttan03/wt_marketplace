@@ -34,7 +34,7 @@ class StoreMembers(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.store.name} - {self.members.get_short_name()} Store-Member'
+        return f'{self.store.name} - {self.members.get_short_name()}-{ self.role }'
 
 
 class StoreInvite(models.Model):
