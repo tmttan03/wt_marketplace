@@ -1,6 +1,8 @@
 {% autoescape off %}
 Hi {{ invite.invited }},
-Please click on the link to 
-{{invite.token}}
+
+Click below to confirm our invitation.
 http://{{ domain }}{% url 'member-register' invite.token %}
+
+If you have problems, please paste the URL above into your web browser.
 {% endautoescape %}
