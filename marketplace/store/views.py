@@ -7,46 +7,44 @@ from django.template.loader import render_to_string
 from django.views.generic import TemplateView
 from django.core.mail import send_mail
 from django.http import HttpResponse
+from django.contrib import messages
 from django.conf import settings
 from accounts.models import User
+
 
 from .forms import InvitationForm, RegisterWithRoleForm
 from .models import Store, StoreInvite, StoreMembers
 
-'''
+
 class SendInvitation(LoginRequiredMixin, TemplateView):
     """Send Invitation Link for Potential Store Members"""
-    template_name = 'posts/includes/update-post-modal.html'
-    form = UpdatePostForm
+    template_name = 'invite.html'
+    form = InvitationForm
 
     def get(self,*args,**kwargs):
-        if self.request.is_ajax():
-            context = super(UpdateView, self).get_context_data(**kwargs)
-            context['form'] = UpdatePostForm(instance=Product.objects.get(pk=self.kwargs.get('product_id')))
-            context['products'] = Product.objects.filter(pk=self.kwargs.get('product_id'))
-            return render(self.request, self.template_name, context)
-        raise Http404
-
+        store = get_object_or_404(Store, owner=self.request.user)
+        context = super(SendInvitation, self).get_context_data(**kwargs)
+        context['form'] = self.form()
+        context['members'] = StoreMembers.objects.filter(store=store)
+        return render(self.request, self.template_name, context)
+        
     def post(self,*args,**kwargs):
-        form = UpdatePostForm(self.request.POST, instance=Product.objects.get(pk=self.kwargs.get('product_id')))
-        if form.is_valid():
-            form.save()
-            messages.success(self.request, f'Item Updated')
-            return redirect('message')
-        return render(self.request, self.template_name, {'form': form}) 
-'''
-
-
-def invite_member(request):
-    if request.method == 'POST':
-        form = InvitationForm(request.POST)
+        form = InvitationForm(self.request.POST)
+        store = get_object_or_404(Store, owner=self.request.user)
+        members = StoreMembers.objects.filter(store=store)
         if form.is_valid():
             invite = form.save(commit=False)
-            invite.owner = request.user
+            invite.owner = self.request.user
             invite.save()
             role = form.cleaned_data.get('role')
-            current_site = get_current_site(request)
-            mail_subject = f'Be one of my { role }'
+
+            if role == '0':
+                role_str = 'Staff'
+            else:
+                role_str = 'Moderator'
+
+            current_site = get_current_site(self.request)
+            mail_subject = f'Be one of my { role_str }'
             to_email = form.cleaned_data.get('invited')
 
             context = {
@@ -63,35 +61,47 @@ def invite_member(request):
                 [to_email],
                 fail_silently=False,
             )
-            return HttpResponse('Please wait for his/her reply')
-    else:
-        form = InvitationForm()
-    return render(request, 'invite.html', {'form': form})
+            messages.success(self.request, f'Please wait for his/her reply')
+        context = {
+            'form' : form,
+            'members' : members
+        }
+        return render(self.request, self.template_name, context) 
 
 
-def activate_membership(request,uidb64): 
-    invite = get_object_or_404(StoreInvite, token=uidb64)
-    store = get_object_or_404(Store, owner=invite.owner)
-    
-    date = datetime.date.today() - invite.created_at.date() 
-    if date.days <= 7 and not invite.is_used:
-        if request.method == 'POST':
-            form = RegisterWithRoleForm(request.POST)
-            if form.is_valid():
-                new_user = form.save(commit=False)
-                new_user.email = invite.invited
-                new_user.save()
-                member = StoreMembers(store=store, members=new_user, role=invite.role)
-                member.save()
-                invite.is_used = True
-                invite.save()
-                #import pdb; pdb.set_trace()
-            else:
-                return render(request, 'activation-form.html', {'form': form})
-        else:
-            form = RegisterWithRoleForm()
-        return render(request, 'activation-form.html', {'form': form})
-    return HttpResponse('Activation link is invalid!')
+class ActivationLink(TemplateView):
+    """Activation Link for Store Members."""
+    template_name = 'activation-form.html'
+    form = RegisterWithRoleForm
 
+    def get(self,*args,**kwargs):
+        invite = get_object_or_404(StoreInvite, token=self.kwargs.get('uidb64'))
+        store = get_object_or_404(Store, owner=invite.owner)
+        date = datetime.date.today() - invite.created_at.date() 
+
+        if date.days <= 7 and not invite.is_used:
+            context = super(ActivationLink, self).get_context_data(**kwargs)
+            context['form'] = self.form()
+            return render(self.request, self.template_name, context)
+        messages.error(self.request, f'Activation link is invalid!')
+        return redirect('/')
+
+    def post(self,*args,**kwargs):
+        form = RegisterWithRoleForm(self.request.POST)
+        #import pdb; pdb.set_trace()
+        if form.is_valid():
+            invite = get_object_or_404(StoreInvite, token=self.kwargs.get('uidb64'))
+            store = get_object_or_404(Store, owner=invite.owner)
+            form.save()
+            new_user = form.save(commit=False)
+            new_user.email = invite.invited
+            new_user.is_staff = False
+            new_user.save()
+            member = StoreMembers(store=store, members=new_user, role=invite.role)
+            member.save()
+            invite.is_used = True
+            invite.save()
+            messages.success(self.request, f'Your account has been created! You are now able to login.')
+        return render(self.request, self.template_name, {'form': form}) 
 
 

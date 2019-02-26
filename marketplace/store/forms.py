@@ -4,18 +4,20 @@ from .models import StoreInvite
 from accounts.models import User
 
 class InvitationForm(forms.ModelForm):
-    invited = forms.EmailField(max_length=200, help_text='Required')
+    invited = forms.EmailField(max_length=200, widget=forms.TextInput(attrs={'placeholder':'Email Address'}), help_text='Required')
 
     class Meta:
         model = StoreInvite
         fields = ('invited', 'role')
     
-    def clean_email(self):
-        email = self.cleaned_data.get('invited')
-        qs = User.objects.filter(email=email)
+    def clean_invited(self):
+        invited = self.cleaned_data.get('invited')
+        qs = User.objects.filter(email=invited)
         if qs.exists():
             raise forms.ValidationError("email is taken")
-        return email
+        # Always return a value to use as the new cleaned data, even if
+        # this method didn't change it.
+        return invited
 
 
 class RegisterWithRoleForm(forms.ModelForm):
@@ -24,7 +26,7 @@ class RegisterWithRoleForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('password','password2')
+        fields = ('firstname','lastname','password','password2')
 
     def clean_password2(self):
         # Check that the two password entries match
