@@ -96,6 +96,7 @@ class ActivationLink(TemplateView):
             new_user = form.save(commit=False)
             new_user.email = invite.invited
             new_user.is_staff = False
+            new_user.is_owner = False
             new_user.save()
             member = StoreMembers(store=store, members=new_user, role=invite.role)
             member.save()
