@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card" style="padding: 20px">
+    <div class="content-section">
+      <div class="media">
+        <img class="rounded-circle account-img" src="{{ user.avatar.url }}">
+        <div class="media-body">
+          <h2 class="account-heading">{{ user.get_email_head }}</h2>
+          <p class="text-secondary">{{ user.email }}</p>
+        </div>
+      </div>
+      <form method="POST" enctype="multipart/form-data" novalidate>
+          {% csrf_token %}
+          <fieldset class="form-group">
+              <legend class="border-bottom mb-4">Profile Info</legend>
+              {{ form.as_p }}
+          </fieldset>
+          <div class="form-group">
+              <button class="btn btn-fb" type="submit">Update</button>
+          </div>
+      </form>
+    </div>
+</div>
+{% endblock content %} 

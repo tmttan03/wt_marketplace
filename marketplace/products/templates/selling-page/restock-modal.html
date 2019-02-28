@@ -1,0 +1,13 @@
+{% load crispy_forms_tags %}
+<div class="card">
+  <form id="restock-form" action="{% url 'restock' product.id %}"  method="POST">
+    {% csrf_token %}
+    <fieldset class="form-group">
+        {{ s_form|crispy }}
+    </fieldset>
+    <div class="form-group">
+        <button id="btn-create" class="btn btn-fb btn-sm" type="submit">Submit</button>
+    </div>
+	</form>
+ </div>
+

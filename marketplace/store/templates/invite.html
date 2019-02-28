@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6">
+      <h3>Expand your Team</h3>
+      <p class="lead">Start by Inviting more Members. </p>
+      <form method="post" novalidate>
+        {% csrf_token %}
+          {% for field in form %}
+          <p>
+            {{ field }}
+            {% if field.help_text %}
+              <small style="display: none">{{ field.help_text }}</small>
+            {% endif %}
+            {% for error in field.errors %}
+              <p style="color: red">{{ error }}</p>
+            {% endfor %}
+          </p>
+          {% endfor %}
+        <button type="submit" class="btn btn-fb">Submit</button>
+      </form>
+    </div>
+    <div class="col-sm-6">
+        <div id="members-panel">
+          {% for member in members %}  
+              <div class="card" id="member-card">
+                <div class="media">
+                  <a href=""> <img class="rounded-circle detail-account-img" src="{{ member.members.avatar.url }}"></a> &nbsp;&nbsp;
+                  <div class="media-body">
+                    <p>
+                      <b><a>{{  member.members.firstname }} {{  member.members.lastname }}  {{  member.members.email }}</a></b><br>
+                      {% if member.role == '0' %}
+                          Staff
+                      {% else %}
+                          Moderator
+                      {% endif %}
+                    </p>
+                  </div>
+                </div>  
+              </div>
+          {% endfor %}   
+        </div>
+    </div>
+  </div>
+</div>
+{% endblock %}  

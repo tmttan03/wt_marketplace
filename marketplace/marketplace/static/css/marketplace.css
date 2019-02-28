@@ -1,0 +1,190 @@
+/* For general customization */
+body {
+    background: #e9ebee;
+    color: #333333;
+    margin: 0!important;
+    padding: 0!important;
+    max-width: 100%!important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #444444;
+}
+
+ul {
+    margin: 0;
+}
+
+a {
+    text-decoration:none!important;
+}
+
+a:hover{
+    text-decoration: none;
+}
+
+
+/* For Navigation Section */
+.bg-fb {
+    background-color: #4267b2;
+    border-bottom: 1px solid #29487d;
+    color: #fff;
+}
+
+.site-header .navbar-nav .nav-link {
+    color: #cbd5db;
+}
+
+.site-header .navbar-nav .nav-link:hover {
+    color: #ffffff;
+}
+
+.site-header .navbar-nav .nav-link.active {
+    font-weight: 500;
+}
+
+.list-group-item {
+    border: none!important;
+}
+
+/* For Buttons */
+.btn-fb{
+    background-color: #4267b2!important;
+    border-color: #4267b2!important;
+    color: white!important;
+}
+
+/* For Search bar inside navigation pane */
+#search-bar{
+    margin-bottom: 0!important;
+    width: 650px!important;
+}
+#search-btn{
+    background-color: #ebedf0;
+    color: #333333;
+}
+.fa-search{
+    color: #333333;
+}
+
+@media only screen and (max-width: 600px) {
+    #search-bar{
+        margin-top: 5px!important;
+        width: auto!important;
+    }  
+}
+
+/* For Content Section */
+#content-body{
+    max-width: 1500px;
+}
+
+
+/* For Input text */
+#id_firstname,  #id_lastname, #id_email, #id_password2, #id_password,#id_password1, #id_username, #id_avatar, #id_invited, #id_role, #id_qty, #id_comment{
+    display: block;
+    width: 100%;
+    height: calc(2.25rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+#members-panel{
+    overflow: scroll;
+    overflow-x: hidden;
+    max-height: 675px
+}
+
+#member-card{
+    padding: 10px;
+}
+
+#member-card .media-body{
+    text-align: left;
+}
+
+#member-card p{
+    margin-bottom: 0; 
+    margin-top: 5px; 
+    font-size: 14px
+}
+
+
+.detail-account-img{
+    height: 40px;
+    width:40px;
+    margin-right:0;
+    margin-bottom:0; 
+    border: #6c757d solid 0.9px;
+}
+
+label, #p-avatar{
+    font-size: 14px;
+    margin-left: 10px;
+    color: #848484;
+}
+
+ul.errorlist {
+    font-size: 14px;
+    margin-left: 10px;
+    color: #b74646;
+}
+
+
+/* Profile */
+.account-img {
+    height: 125px;
+    width: 125px;
+    margin-right: 20px;
+    margin-bottom: 16px;
+}
+
+/*Detail Modal*/
+/* Detail modal */
+
+
+#detail-body.modal-body{
+    padding: 0;
+  }
+  
+  .breadcrumb{
+    background-color: #ffffff!important;
+    margin-bottom: 5px;
+  }
+  
+  .breadcrumb-item{
+    color: #8d949e;
+    font-size: 12px;
+    font-style: normal;
+  }
+  
+  .breadcrumb-item a{
+    color: #8d949e;
+  }
+  
+  #header-modal ol{
+    padding: 10px 0 10px 10px;
+  }
+  
+  .detail-account-img {
+    height: 60px;
+    width: 60px;
+    margin-right: 20px;
+    margin-bottom: 16px;
+  }
+  
+  
+  .sold-account-img{
+    height: 40px;
+    width: 40px;
+    margin-right: 20px;
+    margin-bottom: 16px;
+  }

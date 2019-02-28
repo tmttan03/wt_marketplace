@@ -1,0 +1,25 @@
+<div class="card">
+  <form id="UpdateForm" method="POST" action="" novalidate>
+    {% csrf_token %}
+    <fieldset class="form-group" enctype="multipart/form-data">
+        {{ form.as_p }}
+    </fieldset>
+    
+	{%  for product in products  %}
+        {% if forloop.counter0|divisibleby:4 %} <div class="row text-center" style="margin: 0; overflow: scroll;overflow-y: hidden;max-width: 464px"> {%  endif %}
+        	{% for photo in product.productalbum_set.all %} 
+	          <div class="col-xl-3" style="padding-right: 0">
+	            <img class="img-fluid" src="{{ photo.image.url }}" width="200" height="200" />
+	            <a href=""><span style="position:absolute; top: 0px;left: 100px;right: 0px;background-color: white;">x</span></a>    
+	          </div><!-- col-xl-4 -->
+	        {% empty %}
+	        	No Images Yet
+	        {% endfor %}  
+    	{%  if forloop.counter|divisibleby:4 or forloop.last %}</div><br><!-- row closing -->{%  endif %}
+    {%  endfor %}  
+    <div class="form-group">
+        <button id="btn-update" class="btn btn-fb btn-sm" type="submit">Submit</button>
+    </div>
+	</form>
+	
+ </div>	
