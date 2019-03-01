@@ -12,7 +12,7 @@ from .forms import PostForm, UpdatePostForm, ImageFieldForm, StockForm, CommentF
 from .models import Product, Category, ProductAlbum, Stock, Comment, Favorite
 from transactions.models import Transaction, Payment, Order
 from transactions.forms import ToCartForm, UpdateItemForm
-from store.models import Store
+from store.models import Store, StoreMembers
 
 
 # Create your views here.
@@ -25,6 +25,7 @@ class PostView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         if self.request.is_ajax():
+            #import pdb; pdb.set_trace()
             context = super(PostView, self).get_context_data(**kwargs)
             context['form'] = self.form()
             #context['i_form'] = self.i_form()
@@ -38,11 +39,18 @@ class PostView(LoginRequiredMixin, TemplateView):
         i_form = ImageFieldForm(self.request.POST, self.request.FILES)
 
         if form.is_valid() and s_form.is_valid():
-            store = get_object_or_404(Store, owner=self.request.user)
+            user = self.request.user
             product = form.save(commit=False)
-            product.store = store
+            if user.is_owner:
+                store = get_object_or_404(Store, owner=user)
+                product.store = store
+                product.is_draft = False
+            else:
+                members =  get_object_or_404(StoreMembers, members=user)
+                product.store = members.store
+                product.is_draft = True
+            product.published_by = user
             product.save()
-    
             stock = s_form.save(commit=False)
             stock.stock_no = "Stock#" +  str(datetime.datetime.now())
             stock.product = product
@@ -116,13 +124,39 @@ class UserProductsListView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(UserProductsListView, self).get_context_data(**kwargs)
-        current_store = get_object_or_404(Store, owner=self.request.user)
 
-        context['sold_products'] = Product.objects.filter(store=current_store, status='2').order_by('created_at')
+        user = self.request.user
         
-        product_ids = Product.objects.filter(store=current_store, status='1').order_by('created_at').values_list('id', flat=True)
-        products_w_stocks = Stock.objects.filter(product__id__in=product_ids, status='1')
-        context['products_w_stocks'] = products_w_stocks
+        #import pdb; pdb.set_trace()
+        if user.is_superuser:
+            context['sold_products'] = Product.objects.filter(status='2').order_by('created_at')
+            product_ids = Product.objects.filter(status='1').order_by('created_at').values_list('id', flat=True)
+            products_w_stocks = Stock.objects.filter(product__id__in=product_ids, status='1')
+            context['products_w_stocks'] = products_w_stocks
+        elif user.is_owner:
+            current_store = get_object_or_404(Store, owner=user)
+            context['sold_products'] = Product.objects.filter(store=current_store, status='2').order_by('created_at')
+            product_ids = Product.objects.filter(store=current_store, status='1').order_by('created_at').values_list('id', flat=True)
+            products_w_stocks = Stock.objects.filter(product__id__in=product_ids, status='1')
+            context['products_w_stocks'] = products_w_stocks
+        else:
+            members = get_object_or_404(StoreMembers, members=user)
+            if members.role == "1":
+                context['sold_products'] = Product.objects.filter(store=members.store, status='2').order_by('created_at')
+                product_ids = Product.objects.filter(store=members.store, status='1').order_by('created_at').values_list('id', flat=True)
+                products_w_stocks = Stock.objects.filter(product__id__in=product_ids, status='1')
+                context['products_w_stocks'] = products_w_stocks
+            else:
+                context['sold_products'] = Product.objects.filter(published_by=user, status='2').order_by('created_at')
+                product_ids = Product.objects.filter(published_by=user, status='1').order_by('created_at').values_list('id', flat=True)
+                products_w_stocks = Stock.objects.filter(product__id__in=product_ids, status='1')
+                context['products_w_stocks'] = products_w_stocks
+
+
+
+
+
+
 
         """Transaction Counter"""
         #trans_no = Transaction.objects.filter(buyer=user, status='1')

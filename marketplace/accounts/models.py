@@ -62,7 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=True) # a admin user; non super-user
     is_superuser = models.BooleanField(default=False) # a superuser
-    is_owner = models.BooleanField(default=True)
+    is_owner = models.BooleanField(default=False)
     avatar = models.ImageField(default='profile_pics/default.jpg', upload_to='profile_pics')
     
     # notice the absence of a "Password field", that's built in.

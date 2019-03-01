@@ -2,8 +2,10 @@ import datetime
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.loader import render_to_string
+from django.contrib.auth.models import Permission
 from django.views.generic import TemplateView
 from django.core.mail import send_mail
 from django.http import HttpResponse
@@ -11,10 +13,9 @@ from django.contrib import messages
 from django.conf import settings
 from accounts.models import User
 
-
 from .forms import InvitationForm, RegisterWithRoleForm
 from .models import Store, StoreInvite, StoreMembers
-
+from products.models import Product, Category, ProductAlbum, Stock, Comment, Favorite
 
 class SendInvitation(LoginRequiredMixin, TemplateView):
     """Send Invitation Link for Potential Store Members"""
@@ -96,8 +97,19 @@ class ActivationLink(TemplateView):
             new_user = form.save(commit=False)
             new_user.email = invite.invited
             new_user.is_staff = False
-            new_user.is_owner = False
+            
+            permission_list = ['Can add product', 'Can change product']
+            permission_staff = Permission.objects.filter(name__in=permission_list).values_list('id', flat=True)
+
+            permission_list1 = ['Can make product available', 'Can publish a draft', 'Can restock item', 'Can mark as sold']
+            permission_moderator = Permission.objects.filter(name__in=permission_list1).values_list('id', flat=True)
+            
+            if invite.role == '0':
+                new_user.user_permissions.set(permission_staff) 
+            else:
+                new_user.user_permissions.set(permission_moderator)
             new_user.save()
+            
             member = StoreMembers(store=store, members=new_user, role=invite.role)
             member.save()
             invite.is_used = True

@@ -5,6 +5,19 @@
 	<a id="selling-btn" href=""><li class="list-group-item list-group-item-light">Buying</li></a>
 	<a id="selling-btn" href="{% url 'user-products' %}"><li id="selling-li" class="list-group-item list-group-item-light">Selling</li></a>
 	<a href="" ><li class="list-group-item list-group-item-light">View Buyers</li></a>
-	<li class="list-group-item list-group-item-light "><button class="btn btn-primary btn-sm btn-block btn-fb" data-toggle="modal" data-target="#new-product-modal"><span class="fas fa-plus"></span> Sell Something</button></li>
+	
+	{% for perm in user.user_permissions.all %}
+		{% if perm.name == "Can add product" %}
+			<li class="list-group-item list-group-item-light "><button class="btn btn-primary btn-sm btn-block btn-fb" data-toggle="modal" data-target="#new-product-modal"><span class="fas fa-plus"></span> Sell Something</button></li>
+		{% endif %}
+	{% endfor %}
+
+
+	{% if user.is_owner %}
+		<li class="list-group-item list-group-item-light "><button class="btn btn-primary btn-sm btn-block btn-fb" data-toggle="modal" data-target="#new-product-modal"><span class="fas fa-plus"></span> Sell Something</button></li>
+	{% endif %}
+	
+
+
 </ul>
 

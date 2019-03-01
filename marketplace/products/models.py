@@ -40,11 +40,18 @@ class Product(models.Model):
         choices=STATUS_CHOICES,
         default=AVAILABLE,
     )
+	published_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 
 	def __str__(self):
 		return self.name
+
+	class Meta:
+		permissions = (("can_publish_draft", "Can publish a draft post"),
+						("can_make_available", "Can make product available"),
+						("can_restock_item", "Can restock item"),
+						("can_mark_sold", "Can mark as sold"))
 
 
 class ProductAlbum(models.Model):

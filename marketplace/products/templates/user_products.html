@@ -32,18 +32,36 @@
                           </p>
                         </b>
                         <p style="font-size: 13px">  {{ product.description }} </p>
+
+                        
                         <a class="btn btn-fb btn-sm" id="mark-available-btn" class="dropdown-item btn-sm" data-toggle="modal" data-target="#availableModal" href="{% url 'mark-available' product.id %}">Mark as Available</a>
 
-                        <div class="btn-group dropup">
-                          <button type="button" class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          Manage
-                          </button>
-                          <div class="dropdown-menu">
-                            <a id="delete-btn" class="dropdown-item btn-sm" data-toggle="modal" data-target="#deleteModal" href="{% url 'delete-post' product.id %}"><span class="fas fa-times"></span> Delete</a>
+                        
 
-                            <a id="edit-btn" class="dropdown-item btn-sm" data-toggle="modal" data-target="#update_post_modal" href="{% url 'post-update' product.id %}"><span class="fas fa-pen"></span> Edit</a>
-                          </div>
-                        </div>
+                        {% if user.is_owner or user.is_superuser %}
+                          <div class="btn-group dropup">
+                              <button type="button" class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Manage
+                              </button>
+                              <div class="dropdown-menu">
+                                  <a id="delete-btn" class="dropdown-item btn-sm" data-toggle="modal" data-target="#deleteModal" href="{% url 'delete-post' stock.product.id %}"><span class="fas fa-times"></span> Delete</a> 
+                                  <a id="edit-btn" class="dropdown-item btn-sm" data-toggle="modal" data-target="#update_post_modal" href="{% url 'post-update' stock.product.id %}"><span class="fas fa-pen"></span> Edit</a> 
+                              </div>
+                            </div>
+                        {% else %}  
+                          {% for perm in user.user_permissions.all %}
+                            {% if perm.name == "Can change product" %}
+                              <div class="btn-group dropup">
+                                <button type="button" class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Manage
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a id="edit-btn" class="dropdown-item btn-sm" data-toggle="modal" data-target="#update_post_modal" href="{% url 'post-update' stock.product.id %}"><span class="fas fa-pen"></span> Edit</a> 
+                                </div>
+                              </div>
+                            {% endif %}
+                          {% endfor %}
+                        {% endif %}
 
                       </div>
                     </div>
@@ -79,29 +97,61 @@
 
             <p style="font-size: 13px"> <b>{{ stock.stock_no }}</b> - {{ stock.product.description }} </p>
 
+              
+  
+
+            {% if user.is_owner or user.is_superuser %}
               {% if stock.product.is_draft == True %}
                   <a class="btn btn-fb btn-sm" id="publish-btn" class="dropdown-item btn-sm" data-toggle="modal" data-target="#publishModal" href="{% url 'publish-draft' stock.product.id %}">Publish Draft</a>
               {% else %}
                   {% if stock.stock_on_hand <= 0 %}
                       <a class="btn btn-fb btn-sm" id="restock-btn" class="dropdown-item btn-sm" data-toggle="modal" data-target="#restockModal" href="{% url 'restock' stock.product.id %}">Restock Item</a>
-
                       <a class="btn btn-fb btn-sm" id="mark-sold-btn" class="dropdown-item btn-sm" data-toggle="modal" data-target="#soldModal" href="{% url 'mark-sold' stock.product.id %}">Mark as Sold</a>
                   {% else %}
                       <a href="" class="btn btn-fb btn-sm">View Buyers</a> 
                   {% endif %}
               {% endif %}
-   
+              <div class="btn-group">
+                  <button type="button" class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Manage
+                  </button>
+                  <div class="dropdown-menu">
+                      <a id="delete-btn" class="dropdown-item btn-sm" data-toggle="modal" data-target="#deleteModal" href="{% url 'delete-post' stock.product.id %}"><span class="fas fa-times"></span> Delete</a> 
+                      <a id="edit-btn" class="dropdown-item btn-sm" data-toggle="modal" data-target="#update_post_modal" href="{% url 'post-update' stock.product.id %}"><span class="fas fa-pen"></span> Edit</a> 
+                  </div>
+                </div>
+          {% else %}  
+            {% for perm in user.user_permissions.all %}
+              {% if perm.name == "Can change product" %}
+                <div class="btn-group">
+                  <button type="button" class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Manage
+                  </button>
+                  <div class="dropdown-menu">
+                      <a id="edit-btn" class="dropdown-item btn-sm" data-toggle="modal" data-target="#update_post_modal" href="{% url 'post-update' stock.product.id %}"><span class="fas fa-pen"></span> Edit</a> 
+                  </div>
+                </div>
+              {% elif perm.name == "Can publish a draft" %}
+                {% if stock.product.is_draft == True %}
+                  <a class="btn btn-fb btn-sm" id="publish-btn" class="dropdown-item btn-sm" data-toggle="modal" data-target="#publishModal" href="{% url 'publish-draft' stock.product.id %}">Publish Draft</a>
+                {% endif %}
+              {% elif perm.name == "Can mark as sold" and perm.name == "Can restock item" %}
+                  {% if stock.stock_on_hand <= 0 %}
+                      <a class="btn btn-fb btn-sm" id="restock-btn" class="dropdown-item btn-sm" data-toggle="modal" data-target="#restockModal" href="{% url 'restock' stock.product.id %}">Restock Item</a>
+                      <a class="btn btn-fb btn-sm" id="mark-sold-btn" class="dropdown-item btn-sm" data-toggle="modal" data-target="#soldModal" href="{% url 'mark-sold' stock.product.id %}">Mark as Sold</a>
+                  {% else %}
+                      <a href="" class="btn btn-fb btn-sm">View Buyers</a> 
+                  {% endif %}
+              {% endif %}
 
-            <div class="btn-group">
-              <button type="button" class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Manage
-              </button>
-              <div class="dropdown-menu">
-                <a id="delete-btn" class="dropdown-item btn-sm" data-toggle="modal" data-target="#deleteModal" href="{% url 'delete-post' stock.product.id %}"><span class="fas fa-times"></span> Delete</a>
 
-                <a id="edit-btn" class="dropdown-item btn-sm" data-toggle="modal" data-target="#update_post_modal" href="{% url 'post-update' stock.product.id %}"><span class="fas fa-pen"></span> Edit</a>
-              </div>
-            </div>
+
+            {% endfor %}
+
+
+
+          {% endif %}
+
           </div>
         </div>
       </div><br>

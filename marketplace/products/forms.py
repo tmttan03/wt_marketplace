@@ -12,7 +12,7 @@ class PostForm(forms.ModelForm):
 	location= forms.CharField(label='',widget=forms.TextInput(attrs={'onFocus':'geolocate()','autocomplete':'off', 'placeholder':'Location'}))
 	class Meta:
 		model = Product
-		fields = ['is_draft','name','price','location','category','description']
+		fields = ['name','price','location','category','description']
 
 
 class UpdatePostForm(forms.ModelForm):
